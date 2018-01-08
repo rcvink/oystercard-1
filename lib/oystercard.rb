@@ -1,7 +1,6 @@
 class Oystercard
 
-  attr_reader :balance, :in_journey
-  alias_method :in_journey?, :in_journey
+  attr_reader :balance, :entry_station
 
   MAX_BALANCE = 90.00
   MIN_JOURNEY_CHARGE = 1.00
@@ -11,19 +10,23 @@ class Oystercard
     @in_journey = false
   end
 
+  def in_journey?
+    !@entry_station.nil?
+  end
+
   def top_up(value)
     fail "Cannot top up past maximum balance of #{MAX_BALANCE}" if @balance + value > MAX_BALANCE
     @balance += value
   end
 
-  def touch_in
+  def touch_in(entry_station)
     raise "insufficient balance for journey" if @balance < MIN_JOURNEY_CHARGE
-    @in_journey = true
+    @entry_station = entry_station
   end
 
   def touch_out
     deduct(MIN_JOURNEY_CHARGE)
-    @in_journey = false
+    @entry_station = nil
   end
 
   private

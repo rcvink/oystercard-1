@@ -26,20 +26,23 @@ describe Oystercard do
   end
 
   describe "#touch_in" do
-    it "should set in_journey to true" do
-      expect(oystercard.touch_in).to eq true
-    end
+
+    let (:entry_station) { double :entry_station}
 
     it "should raise an error if a card with insufficient balance is touched in" do
       oystercard = Oystercard.new(0.99)
-      expect{ oystercard.touch_in }.to raise_error "insufficient balance for journey"
+      expect{ oystercard.touch_in(entry_station) }.to raise_error "insufficient balance for journey"
+    end
+
+    it "expects the card to remember the entry station after touch in" do
+      expect(oystercard.touch_in(entry_station)).to eq entry_station
     end
 
   end
 
   describe "#touch_out" do
     it "should set in_journey to false" do
-      expect(oystercard.touch_out).to eq false
+      expect(oystercard.touch_out).to eq nil
     end
 
     it "should charge card for journey" do
@@ -47,6 +50,6 @@ describe Oystercard do
     end
   end
 
-    
+
 
 end
