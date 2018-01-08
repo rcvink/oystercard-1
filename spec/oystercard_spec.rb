@@ -25,4 +25,14 @@ describe Oystercard do
 
   end
 
+  describe "#deduct" do
+
+    it "should deduct value from the balance" do
+      oystercard = Oystercard.new(5.00)
+      expect(oystercard.deduct(1.50)).to eq 3.50
+    end
+
+
+  end
+
 end
