@@ -46,4 +46,9 @@ describe Oystercard do
     end
   end
 
+  it "should be in journey after touching in" do
+    oystercard.touch_in
+    expect(oystercard).to be_in_journey
+  end
+
 end
