@@ -32,7 +32,18 @@ describe Oystercard do
       expect(oystercard.deduct(1.50)).to eq 3.50
     end
 
+  end
 
+  describe "#touch_in" do
+    it "should set in_journey to true" do
+      expect(oystercard.touch_in).to eq true
+    end
+  end
+
+  describe "#touch_out" do
+    it "should set in_journey to false" do
+      expect(oystercard.touch_out).to eq false
+    end
   end
 
 end
