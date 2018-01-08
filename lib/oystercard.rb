@@ -4,6 +4,7 @@ class Oystercard
   alias_method :in_journey?, :in_journey
 
   MAX_BALANCE = 90.00
+  MIN_JOURNEY_CHARGE = 1.00
 
   def initialize(initial_balance = 0.00)
     @balance = initial_balance
@@ -20,6 +21,7 @@ class Oystercard
   end
 
   def touch_in
+    raise "insufficient balance for journey" if @balance < MIN_JOURNEY_CHARGE
     @in_journey = true
   end
 

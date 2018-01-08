@@ -2,12 +2,12 @@ require "oystercard"
 
 describe Oystercard do
 
-  subject(:oystercard) { described_class.new }
+  subject(:oystercard) { described_class.new(5.00) }
 
   describe "#balance" do
 
     it "should return balance" do
-      expect(oystercard.balance).to eq 0
+      expect(oystercard.balance).to eq 5.00
     end
 
   end
@@ -15,7 +15,8 @@ describe Oystercard do
   describe "#top_up" do
 
     it "should increase balance" do
-      expect(oystercard.top_up(3.50)).to eq 3.50
+      initial_balance = oystercard.balance
+      expect(oystercard.top_up(3.50)).to eq (initial_balance + 3.50)
     end
 
     it "should not allow top-up over max balance" do
@@ -28,8 +29,8 @@ describe Oystercard do
   describe "#deduct" do
 
     it "should deduct value from the balance" do
-      oystercard = Oystercard.new(5.00)
-      expect(oystercard.deduct(1.50)).to eq 3.50
+      initial_balance = oystercard.balance
+      expect(oystercard.deduct(1.50)).to eq (initial_balance - 1.50)
     end
 
   end
@@ -38,6 +39,12 @@ describe Oystercard do
     it "should set in_journey to true" do
       expect(oystercard.touch_in).to eq true
     end
+
+    it "should raise an error if a card with insufficient balance is touched in" do
+      oystercard = Oystercard.new(0.99)
+      expect{ oystercard.touch_in }.to raise_error "insufficient balance for journey"
+    end
+
   end
 
   describe "#touch_out" do
