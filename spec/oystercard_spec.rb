@@ -7,21 +7,22 @@ describe Oystercard do
   describe "#balance" do
 
     it "should return balance" do
-        expect(oystercard.balance).to eq 0
+      expect(oystercard.balance).to eq 0
     end
 
-end
+  end
 
-describe "#top_up" do
+  describe "#top_up" do
 
     it "should increase balance" do
-        expect(oystercard.top_up(3.50)).to eq 3.50
+      expect(oystercard.top_up(3.50)).to eq 3.50
     end
 
+    it "should not allow top-up over max balance" do
+      oystercard = Oystercard.new(Oystercard::MAX_BALANCE)
+      expect { oystercard.top_up(1.00) }.to raise_error("Cannot top up past maximum balance of #{Oystercard::MAX_BALANCE}")
+    end
 
-end
-
-
-
+  end
 
 end
