@@ -15,22 +15,12 @@ describe Oystercard do
   describe "#top_up" do
 
     it "should increase balance" do
-      initial_balance = oystercard.balance
-      expect(oystercard.top_up(3.50)).to eq (initial_balance + 3.50)
+      expect{ oystercard.top_up(3.50) }.to change { oystercard.balance }.by (3.50)
     end
 
     it "should not allow top-up over max balance" do
       oystercard = Oystercard.new(Oystercard::MAX_BALANCE)
       expect { oystercard.top_up(1.00) }.to raise_error("Cannot top up past maximum balance of #{Oystercard::MAX_BALANCE}")
-    end
-
-  end
-
-  describe "#deduct" do
-
-    it "should deduct value from the balance" do
-      initial_balance = oystercard.balance
-      expect(oystercard.deduct(1.50)).to eq (initial_balance - 1.50)
     end
 
   end
@@ -51,11 +41,12 @@ describe Oystercard do
     it "should set in_journey to false" do
       expect(oystercard.touch_out).to eq false
     end
+
+    it "should charge card for journey" do
+      expect { oystercard.touch_out }.to change { oystercard.balance }.by (-1.00)
+    end
   end
 
-  it "should be in journey after touching in" do
-    oystercard.touch_in
-    expect(oystercard).to be_in_journey
-  end
+    
 
 end
