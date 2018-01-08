@@ -4,10 +4,25 @@ describe Oystercard do
 
   subject(:oystercard) { described_class.new(5.00) }
 
-  describe "#balance" do
+  let (:entry_station) { double :entry_station}
+  let (:exit_station) { double :exit_station}
 
-    it "should return balance" do
-      expect(oystercard.balance).to eq 5.00
+  describe "journey history feature test" do
+    it "should store a journey after touching in and out" do
+      journey = { entry_station => exit_station }
+      oystercard.touch_in(entry_station)
+      oystercard.touch_out(exit_station)
+      expect(oystercard.journey_history).to include journey
+    end
+  end
+
+  describe "#initialize" do
+
+    it "should set initial balance" do
+    end
+
+    it "should create blank journey history" do
+      expect(oystercard.journey_history).to be_empty
     end
 
   end
@@ -27,8 +42,6 @@ describe Oystercard do
 
   describe "#touch_in" do
 
-    let (:entry_station) { double :entry_station}
-
     it "should raise an error if a card with insufficient balance is touched in" do
       oystercard = Oystercard.new(0.99)
       expect{ oystercard.touch_in(entry_station) }.to raise_error "insufficient balance for journey"
@@ -41,15 +54,15 @@ describe Oystercard do
   end
 
   describe "#touch_out" do
-    it "should set in_journey to false" do
-      expect(oystercard.touch_out).to eq nil
-    end
 
     it "should charge card for journey" do
-      expect { oystercard.touch_out }.to change { oystercard.balance }.by (-1.00)
+      expect { oystercard.touch_out(exit_station) }.to change { oystercard.balance }.by (-1.00)
     end
+
+    it "should clear entry station on touch out" do
+      expect(oystercard.touch_out(exit_station)).to eq nil
+    end
+
   end
-
-
 
 end
