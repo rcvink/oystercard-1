@@ -51,10 +51,9 @@ describe Oystercard do
 
   describe "journey history" do
     it "should store a journey after touching in and out" do
-      # journey = { entry_station => exit_station }
-      journey = double(:journey, :fare => 4)
+      journey = double(:journey)
       oystercard.touch_in(entry_station)
-      oystercard.touch_out(exit_station, journey)
+      oystercard.touch_out(exit_station)
       expect(oystercard.journey_history).to include journey
     end
   end
