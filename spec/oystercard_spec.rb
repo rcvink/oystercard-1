@@ -33,7 +33,7 @@ describe Oystercard do
     end
 
     it "expects the card to create journey object after touch in" do
-      expect(oystercard.touch_in(entry_station)).to eq entry_station
+      expect(oystercard.touch_in(entry_station)).to be_a Journey
     end
   end
 

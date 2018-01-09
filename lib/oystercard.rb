@@ -20,18 +20,13 @@ class Oystercard
 
   def touch_in(entry_station)
     raise "insufficient balance for journey" if @balance < Journey::MIN_JOURNEY_CHARGE
-    # touch_out(nil) if !!@current_journey 
-    if !!@current_journey 
-    @current_journey = Journey.new(entry_station)
-    @current_journey.entry_station
+    close_journey if !!@current_journey
+    create_journey(entry_station)
   end
 
   def touch_out(exit_station)
-    # touch_in(nil) if @current_journey.nil? 
-    
-    deduct(@current_journey.fare(exit_station))
-    store_journey(@current_journey)
-    @current_journey = nil
+    create_journey if @current_journey.nil?
+    close_journey(exit_station)
   end
 
   private
@@ -42,6 +37,16 @@ class Oystercard
 
   def store_journey(journey)
     @journey_history << journey
+  end
+
+  def close_journey(exit_station = nil)
+    deduct(@current_journey.fare(exit_station))
+    store_journey(@current_journey)
+    @current_journey = nil
+  end
+
+  def create_journey(entry_station = nil)
+    @current_journey = Journey.new(entry_station)
   end
 
 end
