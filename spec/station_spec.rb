@@ -7,6 +7,9 @@ describe Station do
     it "should create a new station with name" do
       expect(station.name).to eq "King's Cross"
     end
+    it "should create a new station with zone" do
+      expect(station.zone).to eq 1
+    end
   end
 
 end
