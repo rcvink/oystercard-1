@@ -10,12 +10,9 @@ class Journey
   end
 
   def fare(exit_station)
-    return PENALTY_CHARGE if entry_station.nil? || exit_station.nil?
+    @exit_station = exit_station
+    return PENALTY_CHARGE if @entry_station.nil? || @exit_station.nil?
     MIN_JOURNEY_CHARGE
   end
-
-  # def in_journey?
-  #   !@entry_station.nil?
-  # end
 
 end
