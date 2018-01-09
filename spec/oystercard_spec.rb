@@ -32,26 +32,29 @@ describe Oystercard do
       expect{ oystercard.touch_in(entry_station) }.to raise_error "insufficient balance for journey"
     end
 
-    it "expects the card to remember the entry station after touch in" do
+    it "expects the card to create journey object after touch in" do
       expect(oystercard.touch_in(entry_station)).to eq entry_station
     end
   end
 
   describe "#touch_out" do
     it "should charge card for journey" do
-      expect { oystercard.touch_out(exit_station) }.to change { oystercard.balance }.by (-1.00)
+      journey = double(:journey, :fare => 4)
+      expect { oystercard.touch_out(exit_station, journey) }.to change { oystercard.balance }.by (-4.00)
     end
 
-    it "should clear entry station on touch out" do
-      expect(oystercard.touch_out(exit_station)).to eq nil
+    it "should clear current journey on touch out" do
+      journey = double(:journey, :fare => 4)
+      expect(oystercard.touch_out(exit_station,journey)).to eq nil
     end
   end
 
   describe "journey history" do
     it "should store a journey after touching in and out" do
-      journey = { entry_station => exit_station }
+      # journey = { entry_station => exit_station }
+      journey = double(:journey, :fare => 4)
       oystercard.touch_in(entry_station)
-      oystercard.touch_out(exit_station)
+      oystercard.touch_out(exit_station, journey)
       expect(oystercard.journey_history).to include journey
     end
   end

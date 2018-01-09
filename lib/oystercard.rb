@@ -4,12 +4,14 @@ class Oystercard
 
   attr_reader :balance, :journey_history
 
+
   MAX_BALANCE = 90.00
-  MIN_JOURNEY_CHARGE = 1.00
+
 
   def initialize(initial_balance = 0.00)
     @balance = initial_balance
-    @journey_history = {}
+    @journey_history = []
+    @current_journey = nil
   end
 
   def top_up(value)
@@ -18,14 +20,19 @@ class Oystercard
   end
 
   def touch_in(entry_station)
-    raise "insufficient balance for journey" if @balance < MIN_JOURNEY_CHARGE
-    @entry_station = entry_station
+    raise "insufficient balance for journey" if @balance < Journey::MIN_JOURNEY_CHARGE
+    # guard to check if current journey exists, touch_out(nil)
+    touch_out(nil) unless @current_journey.nil?
+    @current_journey = Journey.new(entry_station)
+    @current_journey.entry_station
   end
 
-  def touch_out(exit_station)
-    deduct(MIN_JOURNEY_CHARGE)
-    store_journey(@entry_station, exit_station)
-    @entry_station = nil
+  def touch_out(exit_station, journey=@current_journey)
+    # guard - if no journey object, touch_in(nil)
+    touch_in(nil) if @current_journey.nil?
+    deduct(journey.fare(exit_station))
+    store_journey(journey)
+    @current_journey = nil
   end
 
   private
@@ -34,11 +41,9 @@ class Oystercard
     @balance -= value
   end
 
-  def store_journey(entry_station, exit_station)
-    self.journey_history.store(entry_station, exit_station)
+  def store_journey(journey)
+    @journey_history << journey
   end
 
-  def in_journey?
-    !@entry_station.nil?
-  end
+
 end
