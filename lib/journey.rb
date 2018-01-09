@@ -9,7 +9,7 @@ class Journey
     @entry_station, @exit_station = entry_station, exit_station
   end
 
-  def fare(exit_station)
+  def fare(exit_station = nil)
     @exit_station = exit_station
     return PENALTY_CHARGE if incomplete?
     MIN_JOURNEY_CHARGE
