@@ -9,9 +9,13 @@ class Journey
     @entry_station, @exit_station = entry_station, exit_station
   end
 
+  def incomplete?
+    @entry_station.nil? || @exit_station.nil?
+  end
+
   def fare(exit_station)
     @exit_station = exit_station
-    return PENALTY_CHARGE if @entry_station.nil? || @exit_station.nil?
+    return PENALTY_CHARGE if incomplete?
     MIN_JOURNEY_CHARGE
   end
 

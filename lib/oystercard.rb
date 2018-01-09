@@ -24,10 +24,10 @@ class Oystercard
     @current_journey.entry_station
   end
 
-  def touch_out(exit_station, journey=@current_journey)
+  def touch_out(exit_station)
     touch_in(nil) if @current_journey.nil? # if no existing journey, create one w/ entry_stn =  nil (=> max fare)
-    deduct(journey.fare(exit_station))
-    store_journey(journey)
+    deduct(@current_journey.fare(exit_station))
+    store_journey(@current_journey)
     @current_journey = nil
   end
 
