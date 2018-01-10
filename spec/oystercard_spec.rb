@@ -39,13 +39,13 @@ describe Oystercard do
 
   describe "#touch_out" do
     it "should charge card for journey" do
-      journey = double(:journey, :fare => 4)
-      expect { oystercard.touch_out(exit_station, journey) }.to change { oystercard.balance }.by (-4.00)
+      oystercard.touch_in(entry_station)
+      expect { oystercard.touch_out(exit_station) }.to change { oystercard.balance }.by (-1.00)
     end
 
     it "should clear current journey on touch out" do
-      journey = double(:journey, :fare => 4)
-      expect(oystercard.touch_out(exit_station,journey)).to eq nil
+      oystercard.touch_in(entry_station)
+      expect(oystercard.touch_out(exit_station)).to eq nil
     end
   end
 
@@ -54,7 +54,7 @@ describe Oystercard do
       journey = double(:journey)
       oystercard.touch_in(entry_station)
       oystercard.touch_out(exit_station)
-      expect(oystercard.journey_history).to include journey
+      expect(oystercard.journey_history[0]).to be_a Journey
     end
   end
 
