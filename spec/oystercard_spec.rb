@@ -40,7 +40,10 @@ describe Oystercard do
 
   describe "#touch_out" do
 
-    before { allow(journey).to receive(:finish).and_return(1.00) }
+    before { 
+      allow(journey).to receive(:fare).and_return(1.00)
+      allow(journey).to receive(:finish)
+    }
 
     it "should charge card for journey" do
       expect { oystercard.touch_out(exit_station, journey) }.to change { oystercard.balance }.by (-1.00)
