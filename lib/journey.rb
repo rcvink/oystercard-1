@@ -5,17 +5,16 @@ class Journey
   PENALTY_CHARGE = 6.00
 
   def initialize(entry_station = nil)
-    @entry_station= entry_station
+    @entry_station = entry_station
   end
 
   def finish(exit_station)
     @exit_station = exit_station
-    fare
   end
 
   def fare
     return PENALTY_CHARGE if incomplete?
-    1.00
+    (@entry_station.zone - @exit_station.zone).abs + 1.00
   end
 
   private
