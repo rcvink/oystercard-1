@@ -1,5 +1,5 @@
-require_relative 'journey'
-require_relative 'station'
+require_relative 'journeylog'
+
 
 class Oystercard
 
@@ -26,6 +26,10 @@ class Oystercard
   def touch_out(exit_station)
     @journey_log.finish(exit_station)
     deduct(@journey_log.journeys[-1].fare)
+  end
+
+  def journeys
+    @journey_log.journeys
   end
 
   private

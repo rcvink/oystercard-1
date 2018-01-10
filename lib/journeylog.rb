@@ -13,21 +13,16 @@ class JourneyLog
   end
 
   def finish(station)
-    #adds exit station to current journey
     close_journey(station)
-    #@history
   end
 
   def journeys
-    #returns array of journeys
-    @history
+    @history.dup
   end
 
   private
 
   def current_journey
-    #return incomplete journey
-    #or create a new journey
     @current_journey ||= create_journey
   end
 
