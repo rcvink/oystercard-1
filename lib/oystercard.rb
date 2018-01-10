@@ -45,13 +45,13 @@ class Oystercard
 
   def store_journey(journey)
     @journey_history << journey
+    @current_journey = nil
   end
 
   def close_journey(exit_station = nil, journey)
-    fare = journey.finish(exit_station)
-    deduct(fare)
+    journey.finish(exit_station)
+    deduct(journey.fare)
     store_journey(journey)
-    @current_journey = nil
   end
 
   def create_journey(entry_station = nil, journey_class = Journey)
