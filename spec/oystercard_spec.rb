@@ -1,20 +1,11 @@
 require "oystercard"
 
 describe Oystercard do
-
-  subject(:oystercard) { described_class.new(5.00) }
-
   let (:entry_station) { double :entry_station}
   let (:exit_station) { double :exit_station}
-  let (:journey) { double :journey}
-
-  describe "#initialize" do
-
-    it "should create blank journey history" do
-      expect(oystercard.journey_history).to be_empty
-    end
-
-  end
+  let (:journey) { double :journey, fare: 1}
+  let (:journey_log) { double :journey_log, start: journey, finish: nil, journeys: [journey] }
+  subject(:oystercard) { described_class.new(5.00, journey_log) }
 
   describe "#top_up" do
     it "should increase balance" do
@@ -33,30 +24,14 @@ describe Oystercard do
       expect{ oystercard.touch_in(entry_station) }.to raise_error "insufficient balance for journey"
     end
 
-    it "expects the card to create journey object after touch in" do
-      expect(oystercard.touch_in(entry_station)).to be_a Journey
+    it "should return a journey" do
+      expect(oystercard.touch_in(entry_station)).to eq journey
     end
   end
 
   describe "#touch_out" do
-
-    before { 
-      allow(journey).to receive(:fare).and_return(1.00)
-      allow(journey).to receive(:finish)
-    }
-
     it "should charge card for journey" do
-      expect { oystercard.touch_out(exit_station, journey) }.to change { oystercard.balance }.by (-1.00)
-    end
-
-    it "should clear current journey on touch out" do
-      expect(oystercard.touch_out(exit_station, journey)).to eq nil
-    end
-
-    it "should store a journey after touching out" do
-      oystercard.touch_out(exit_station, journey)
-      expect(oystercard.journey_history).to include journey
+      expect { oystercard.touch_out(exit_station) }.to change { oystercard.balance }
     end
   end
-
 end

@@ -13,8 +13,6 @@ class Journey
     fare
   end
 
-  private
-
   def fare
     return PENALTY_CHARGE if incomplete?
     1.00
