@@ -4,7 +4,7 @@ class Journey
 
   PENALTY_CHARGE = 6.00
 
-  def initialize(entry_station)
+  def initialize(entry_station = nil)
     @entry_station= entry_station
   end
 
