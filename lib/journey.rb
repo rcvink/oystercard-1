@@ -20,6 +20,8 @@ class Journey
     1.00
   end
 
+  private
+
   def incomplete?
     @entry_station.nil? || @exit_station.nil?
   end
