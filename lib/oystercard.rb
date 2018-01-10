@@ -20,13 +20,13 @@ class Oystercard
 
   def touch_in(entry_station)
     raise "insufficient balance for journey" if insufficient_funds?
-    close_journey if @current_journey
-    create_journey(entry_station)
+    close_journey(@current_journey) if @current_journey
+    @current_journey = create_journey(entry_station)
   end
 
-  def touch_out(exit_station)
-    create_journey if @current_journey.nil?
-    close_journey(exit_station)
+  def touch_out(exit_station, journey = @current_journey)
+    journey = create_journey if journey.nil?
+    close_journey(exit_station, journey)
   end
 
   private
@@ -47,15 +47,15 @@ class Oystercard
     @journey_history << journey
   end
 
-  def close_journey(exit_station = nil)
-    fare = @current_journey.finish(exit_station)
+  def close_journey(exit_station = nil, journey)
+    fare = journey.finish(exit_station)
     deduct(fare)
-    store_journey(@current_journey)
+    store_journey(journey)
     @current_journey = nil
   end
 
-  def create_journey(entry_station = nil)
-    @current_journey = Journey.new(entry_station)
+  def create_journey(entry_station = nil, journey_class = Journey)
+    journey_class.new(entry_station)
   end
 
 end

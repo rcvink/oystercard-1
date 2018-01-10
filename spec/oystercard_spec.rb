@@ -5,6 +5,7 @@ describe Oystercard do
   subject(:oystercard) { described_class.new(5.00) }
 
   let (:entry_station) { double :entry_station}
+  let (:journey) { double :journey}
   let (:exit_station) { double :exit_station}
 
   describe "#initialize" do
@@ -38,23 +39,20 @@ describe Oystercard do
   end
 
   describe "#touch_out" do
+
+    before { allow(journey).to receive(:finish).and_return(1.00) }
+
     it "should charge card for journey" do
-      oystercard.touch_in(entry_station)
-      expect { oystercard.touch_out(exit_station) }.to change { oystercard.balance }.by (-1.00)
+      expect { oystercard.touch_out(exit_station, journey) }.to change { oystercard.balance }.by (-1.00)
     end
 
     it "should clear current journey on touch out" do
-      oystercard.touch_in(entry_station)
-      expect(oystercard.touch_out(exit_station)).to eq nil
+      expect(oystercard.touch_out(exit_station, journey)).to eq nil
     end
-  end
 
-  describe "journey history" do
-    it "should store a journey after touching in and out" do
-      journey = double(:journey)
-      oystercard.touch_in(entry_station)
-      oystercard.touch_out(exit_station)
-      expect(oystercard.journey_history[0]).to be_a Journey
+    it "should store a journey after touching out" do
+      oystercard.touch_out(exit_station, journey)
+      expect(oystercard.journey_history).to include journey
     end
   end
 
