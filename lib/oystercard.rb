@@ -3,7 +3,7 @@ require_relative 'station'
 
 class Oystercard
 
-  attr_reader :balance, :journey_history
+  attr_reader :balance
 
   MAX_BALANCE = 90.00
   MINIMUM_FARE = 1.00
