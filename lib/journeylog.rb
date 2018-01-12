@@ -1,6 +1,8 @@
 require_relative 'journey'
 
 class JourneyLog
+  attr_reader :current_journey
+
   def initialize(journey_class = Journey)
     @journey_class = journey_class
     @history = []
@@ -8,10 +10,11 @@ class JourneyLog
 
   def start(station)
     close_journey if @current_journey
-    @current_journey = create_journey(station)
+    create_journey(station)
   end
 
   def finish(station)
+    create_journey unless @current_journey
     close_journey(station)
   end
 
@@ -21,16 +24,12 @@ class JourneyLog
 
   private
 
-  def current_journey
-    @current_journey ||= create_journey
-  end
-
   def store_journey(journey)
     @history << journey
   end
 
   def create_journey(entry_station = nil)
-    @journey_class.new(entry_station)
+    @current_journey = @journey_class.new(entry_station)
   end
 
   def close_journey(exit_station = nil)

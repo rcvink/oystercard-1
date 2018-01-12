@@ -17,8 +17,9 @@ class Oystercard
     @balance += value
   end
 
-  def touch_in(entry_station)
+  def touch_in(entry_station, journey_log = @journey_log)
     raise "Insufficient balance for journey" if insufficient_funds?
+    deduct(journey_log.current_journey.fare) if journey_log.current_journey.incomplete?
     @journey_log.start(entry_station)
   end
 

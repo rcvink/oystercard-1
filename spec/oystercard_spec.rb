@@ -4,8 +4,8 @@ describe Oystercard do
   INITIAL_BALANCE = 5
   let (:entry_station) { double :entry_station}
   let (:exit_station) { double :exit_station}
-  let (:journey) { double :journey, fare: 1}
-  let (:journey_log) { double :journey_log, start: journey, finish: nil, journeys: [journey] }
+  let (:journey) { double :journey, fare: 1, incomplete?: true }
+  let (:journey_log) { double :journey_log, start: journey, finish: nil, journeys: [journey], current_journey: journey }
   subject(:oystercard) { described_class.new(journey_log, INITIAL_BALANCE) }
 
   describe '#initialize' do
@@ -25,18 +25,23 @@ describe Oystercard do
     end
 
     it "should increase balance" do
-      expect{ oystercard.top_up(3) }.to change { oystercard.balance }.by 3
+      expect { oystercard.top_up(3) }.to change { oystercard.balance }.by 3
     end
   end
 
   describe "#touch_in" do
     it "should fail if balance is insufficient to complete any journey" do
       oystercard = Oystercard.new
-      expect{ oystercard.touch_in(entry_station) }.to raise_error "Insufficient balance for journey"
+      expect { oystercard.touch_in(entry_station) }.to raise_error "Insufficient balance for journey"
+    end
+
+    it "should reduce balance if last journey was incomplete" do
+      #allo
+      expect { oystercard.touch_in(entry_station, journey_log) }.to change { oystercard.balance }
     end
 
     it "should return a new journey" do
-      expect(oystercard.touch_in(entry_station)).to eq journey
+      expect(oystercard.touch_in(entry_station, journey_log)).to eq journey
     end
   end
 

@@ -18,8 +18,6 @@ class Journey
     (@entry_station.zone - @exit_station.zone).abs + BASE_FARE
   end
 
-  private
-
   def incomplete?
     @entry_station.nil? || @exit_station.nil?
   end

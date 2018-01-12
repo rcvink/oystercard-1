@@ -37,4 +37,6 @@ describe JourneyLog do
       expect(journeylog.journeys).to include journey
     end
   end
+
+  describe '#'
 end
