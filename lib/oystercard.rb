@@ -1,31 +1,30 @@
 require_relative 'journeylog'
 
-
 class Oystercard
 
   attr_reader :balance
 
-  MAX_BALANCE = 90.00
-  MINIMUM_FARE = 1.00
+  MAX_BALANCE = 90
+  MINIMUM_FARE = 1
 
-  def initialize(initial_balance = 0.00, journey_log = JourneyLog.new)
-    @balance = initial_balance
+  def initialize(journey_log = JourneyLog.new, balance = 0)
     @journey_log = journey_log
+    @balance = balance
   end
 
   def top_up(value)
-    fail "Cannot top up past maximum balance of #{MAX_BALANCE}" if balance_limit_exceeded?(value)
+    fail "Cannot top up beyond limit of #{MAX_BALANCE}" if limit_exceeded?(value)
     @balance += value
   end
 
   def touch_in(entry_station)
-    raise "insufficient balance for journey" if insufficient_funds?
+    raise "Insufficient balance for journey" if insufficient_funds?
     @journey_log.start(entry_station)
   end
 
   def touch_out(exit_station)
     @journey_log.finish(exit_station)
-    deduct(@journey_log.journeys[-1].fare)
+    deduct(@journey_log.journeys.last.fare)
   end
 
   def journeys
@@ -38,7 +37,7 @@ class Oystercard
     @balance <  MINIMUM_FARE
   end
 
-  def balance_limit_exceeded?(value)
+  def limit_exceeded?(value)
     @balance + value > MAX_BALANCE
   end
 
