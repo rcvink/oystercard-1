@@ -36,7 +36,6 @@ describe Oystercard do
     end
 
     it "should reduce balance if last journey was incomplete" do
-      #allo
       expect { oystercard.touch_in(entry_station, journey_log) }.to change { oystercard.balance }
     end
 
